@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: datafog
+Version: 1.0
+Summary: A Python package that provides several methods for data handling
+Author: Sid Mohan
+Author-email: sid@datafog.dev
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python :: 3.10
+License-File: LICENSE.MD

@@ -14,7 +14,7 @@ setup(
     long_description=open('README.md').read(),  # a long description read from the README.md file
     install_requires=['faker', 'pandas','sqlalchemy','sqlalchemy.orm','werkzeug','typing'],  # a list of other Python packages required by this package
     classifiers=[
-        'License :: BSD 3-Clause License',  # Choose a license
+        'License :: OSI Approved :: BSD License',  # Choose a license
         'Programming Language :: Python :: 3.10',  # Python version
         # etc.
     ],
