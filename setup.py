@@ -12,7 +12,7 @@ setup(
     author_email='sid@datafog.dev',
     description='A Python package that provides several methods for data handling',  # a brief description of your package
     long_description=open('README.md').read(),  # a long description read from the README.md file
-    install_requires=['faker', 'pandas','sqlalchemy','sqlalchemy.orm','werkzeug','typing'],  # a list of other Python packages required by this package
+    install_requires=['faker', 'pandas','sqlalchemy','sqlalchemy.orm','werkzeug','typing','hashlib'],  # a list of other Python packages required by this package
     classifiers=[
         'License :: OSI Approved :: BSD License',  # Choose a license
         'Programming Language :: Python :: 3.10',  # Python version

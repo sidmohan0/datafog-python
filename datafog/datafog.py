@@ -10,6 +10,7 @@ from faker import Faker
 from .models import ValueMapping, Base
 import typing
 from typing import Optional, Dict, Tuple, List, Any
+import hashlib
 
 # Logging
 logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
