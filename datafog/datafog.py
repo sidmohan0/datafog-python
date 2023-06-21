@@ -22,7 +22,7 @@ logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(level
 class DataFog:
 
     def __init__(self, db_path='sqlite:///./test.db'):
-        self.engine = create_engine(db_path, echo = True)
+        self.engine = create_engine(db_path, echo = False)
         Base.metadata.create_all(self.engine)  # Create tables
         self.Session = sessionmaker(bind=self.engine)
 
