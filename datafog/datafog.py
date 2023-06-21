@@ -8,7 +8,8 @@ import binascii
 import faker
 from faker import Faker
 from .models import ValueMapping
-import binascii
+from typing import Optional, Dict
+
 
 
 
@@ -20,13 +21,13 @@ logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(level
 
 
 
-class datafog:
+class DataFog:
 
     def __init__(self, db_path='sqlite:///./test.db'):
         self.engine = create_engine(db_path, echo = True)
         self.Session = sessionmaker(bind=self.engine)
 
-    def scan(self, input_path):
+    def scan(self, input_path: str) -> Tuple[bool, List[str]]:
         """
         The method returns a tuple, where the first element is the boolean contains_pii
          and the second element is the list pii_fields. You can then call this method 
@@ -52,11 +53,7 @@ class datafog:
 
         return contains_pii, pii_fields
 
-    def swap(self, input_path, output_path):
-
-
-
-
+    def swap(self, input_path: str, output_path: str) -> bool:
 
         # Faker Setup
         fake = Faker()
@@ -92,13 +89,13 @@ class datafog:
 
         return True
 
-    def hash(self):
-        # Implement your code to hash value here
-        pass
+    @staticmethod
+    def redact(value: str) -> str:
+        return "[REDACTED]"
 
-    def redact(self):
-        # Implement your code to apply redaction here
-        pass
+    @staticmethod
+    def hash(value: str) -> str:
+        return hashlib.sha256(value.encode('utf-8')).hexdigest()
 
     def save(self, record_id, field_name, original_value, new_value):
         # create a new session
@@ -116,14 +113,56 @@ class datafog:
         session.add(data)
         session.commit()
 
-    def kafka_consume(self):
-        # Implement your code to consume Kafka stream and parse message here
-        pass
 
-    def lookup(self):
-        # Implement your code to perform lookup to relational DB here
-        pass
+    def process_kafka_record(self, record: Dict) -> Dict:
+        """
+        Process a Kafka record: lookup in the ValueMapping table and swap the original values 
+        with the new values for each key that matches a 'fieldname' in the record.
+        """
+        # Step 2-3: Parse the record to isolate the message
+        message = record['message']  # or however you access the message in the record
+        
+        # Step 4: Perform a lookup on the ValueMapping table and grab all records that match the record_id
+        record_id = message.get('record_id')
+        value_mappings = self.lookup(record_id)
 
-    def swap_back(self):
-        # Implement your code to swap out original PII data with synthetic data before returning to application here
-        pass
+        # Step 5: If there is a record that is a match, swap out the original values with the new values
+        if value_mappings:
+            for value_mapping in value_mappings:
+                if value_mapping.field_name in message:
+                    message[value_mapping.field_name] = value_mapping.new_value
+        
+        # Step 6: Return the modified record
+        record['message'] = message
+        return record
+
+    def lookup(self, record_id: str) -> Optional[List[ValueMapping]]:
+        """
+        Query the ValueMapping table for records that match the given record_id.
+        """
+        value_mappings = ValueMapping.query.filter_by(record_id=record_id).all()
+        return value_mappings if value_mappings else None
+
+
+
+    def swap_back(self, record: Dict) -> Dict:
+        """
+        Process a Kafka record: lookup in the ValueMapping table and swap the synthetic values 
+        with the original values for each key that matches a 'fieldname' in the record.
+        """
+        # Parse the record to isolate the message
+        message = record['message']  # or however you access the message in the record
+
+        # Perform a lookup on the ValueMapping table and grab all records that match the record_id
+        record_id = message.get('record_id')
+        value_mappings = self.lookup(record_id)
+
+        # If there is a record that is a match, swap out the synthetic values with the original values
+        if value_mappings:
+            for value_mapping in value_mappings:
+                if value_mapping.field_name in message:
+                    message[value_mapping.field_name] = value_mapping.original_value
+
+        # Return the modified record
+        record['message'] = message
+        return record

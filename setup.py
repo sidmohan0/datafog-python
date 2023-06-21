@@ -12,5 +12,5 @@ setup(
     author_email='sid@datafog.dev',
     description='A Python package that provides several methods for data handling',  # a brief description of your package
     long_description=open('README.md').read(),  # a long description read from the README.md file
-    install_requires=[faker, pandas,],  # a list of other Python packages required by this package
+    install_requires=[faker, pandas,sqlalchemy,sqlalchemy.orm,werkzeug.utils, os, logging, typing],  # a list of other Python packages required by this package
 )
