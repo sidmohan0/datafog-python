@@ -7,11 +7,9 @@ import logging
 import binascii
 import faker
 from faker import Faker
-from .models import ValueMapping
-from typing import Optional, Dict
-
-
-
+from .models import ValueMapping, Base
+import typing
+from typing import Optional, Dict, Tuple, List, Any
 
 # Logging
 logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
@@ -25,6 +23,7 @@ class DataFog:
 
     def __init__(self, db_path='sqlite:///./test.db'):
         self.engine = create_engine(db_path, echo = True)
+        Base.metadata.create_all(self.engine)  # Create tables
         self.Session = sessionmaker(bind=self.engine)
 
     def scan(self, input_path: str) -> Tuple[bool, List[str]]:
@@ -101,17 +100,26 @@ class DataFog:
         # create a new session
         session = self.Session()
 
-        # create a new ValueMapping instance
-        data = ValueMapping(
-            record_id=record_id,
-            field_name=field_name,
-            original_value=original_value,
-            new_value=new_value,
-        )
+        try:
+            # create a new ValueMapping instance
+            data = ValueMapping(
+                record_id=record_id,
+                field_name=field_name,
+                original_value=original_value,
+                new_value=new_value,
+            )
 
-        # add and commit
-        session.add(data)
-        session.commit()
+            # add and commit
+            session.add(data)
+            session.commit()
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            session.rollback()  # Rollback the changes on error
+
+        finally:
+            session.close()  # Close the session
+
 
 
     def process_kafka_record(self, record: Dict) -> Dict:
@@ -140,8 +148,10 @@ class DataFog:
         """
         Query the ValueMapping table for records that match the given record_id.
         """
-        value_mappings = ValueMapping.query.filter_by(record_id=record_id).all()
+        session = self.Session()  # create a session
+        value_mappings = session.query(ValueMapping).filter_by(record_id=record_id).all()
         return value_mappings if value_mappings else None
+
 
 
 

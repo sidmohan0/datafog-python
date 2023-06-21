@@ -7,7 +7,7 @@ class ValueMapping(Base):
     __tablename__ = 'value_mapping'  # make sure this is the actual name of your table in the DB
 
     id = Column(Integer, primary_key=True)
-    record_id = Column(String, nullable=False)
+    record_id = Column(String)
     field_name = Column(String, nullable=False)
     original_value = Column(String, nullable=False)
     new_value = Column(String, nullable=False)

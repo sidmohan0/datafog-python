@@ -1,2 +1,2 @@
-from .models import ValueMapping
-from .datafog import datafog
+from .models import ValueMapping, Base
+from .datafog import DataFog
