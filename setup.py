@@ -10,13 +10,14 @@ with open('README.md', 'r') as f:
 
 setup(
     name='datafog',
-    version='1.3.1',  # versioning of your package
+    version='1.3.3',  # versioning of your package
     packages=find_packages(),  # automatically find all packages
     author='Sid Mohan',
     author_email='sid@datafog.dev',
+    description='A Python package for data anonymization',
     long_description=long_description,
     long_description_content_type='text/markdown', 
-    install_requires=['faker', 'pandas','sqlalchemy','sqlalchemy.orm','werkzeug','typing','hashlib'],  # a list of other Python packages required by this package
+    install_requires=['faker', 'pandas', 'sqlalchemy','gym==0.21.0'],
     classifiers=[
         'License :: OSI Approved :: BSD License',  # Choose a license
         'Programming Language :: Python :: 3.10',  # Python version
