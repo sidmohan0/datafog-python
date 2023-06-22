@@ -1,3 +1,4 @@
 faker
 pandas
 sqlalchemy
+gym==0.21.0

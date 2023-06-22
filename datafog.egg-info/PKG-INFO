@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: datafog
-Version: 1.3.3
+Version: 1.3.4
 Summary: A Python package for data anonymization
 Author: Sid Mohan
 Author-email: sid@datafog.dev
@@ -12,6 +12,11 @@ License-File: LICENSE.MD
 # DataFog
 
 DataFog (or the product formerly known as Codexify) is a Python package that simplifies and automates data anonymization tasks. With DataFog, you can quickly scan your datasets for Personal Identifiable Information (PII), swap PII with synthetic data, save and look up original and synthetic data pairs, and more.
+
+**Note** In some cases pip install will not work right off the bat; pip installing these dependencies has worked to-date:
+```bash
+pip install setuptools==65.5.0 "wheel<0.40.0"
+```
 
 ## Libraries Used
 * [faker](www.github.com/joke2k/faker) for Synthetic Data Generation
