@@ -2,6 +2,16 @@
 
 DataFog (or the product formerly known as Codexify) is a Python package that simplifies and automates data anonymization tasks. With DataFog, you can quickly scan your datasets for Personal Identifiable Information (PII), swap PII with synthetic data, save and look up original and synthetic data pairs, and more.
 
+## Libraries Used
+* [faker](www.github.com/joke2k/faker) for Synthetic Data Generation
+* Boilerplate PII detection code (swapping in with a custom solution soon)
+
+## Coming Soon:
+* product demo
+* documentation
+* `examples/` directory for more detailed examples and usage information
+
+please see www.datafog.dev for more information or contact me at sidmohan001@gmail.com
 ## Installation
 
 DataFog can be installed via pip. Use the following command to install:
@@ -43,10 +53,6 @@ output_path = "path_to_output_directory/"
 datafog.swap("path_to_your_file.csv", output_path)
 ```
 
-Coming Soon:
-* product demo
-* documentation
-* `examples/` directory for more detailed examples and usage information
 
 ---
 
