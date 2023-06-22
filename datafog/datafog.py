@@ -22,7 +22,13 @@ class DataFog:
         self.engine = create_engine(db_path, echo = False)
         Base.metadata.create_all(self.engine)  # Create tables
         self.Session = sessionmaker(bind=self.engine)
-        self.ban_list = ["account_number","address", "age", "date", "date_interval", "dob", "driver_license", "duration", "email_address", "event", "filename", "gender_sexuality", "healthcare_number", "ip_address", "language", "location", "Location Address", "location_city", "location_coordinate", "location_country", "location_state", "location_zip", "marital_status", "money", "name", "name_family", "name_given", "numerical_pii", "organization", "occupation", "origin", "passport_number", "password", "phone_number", "physical_attribute", "political_affiliation", "religion", "ssn", "time", "url", "username", "vehicle_id", "zodiac_sign", "blood_type", "condition", "dose", "drug", "injury", "medical_process", "statistics", "bank_account", "credit_card", "credit_card_expiration", "cvv", "routing_number","First Name", "Last Name"]  # Put your initial list here
+        self.ban_list =["address","age","bank_account","credit_card",
+        "credit_card_expiration","date","email_address","first_name",
+        "ip_address","last_name","location","city","latlong","country",
+        "state","zip","name","occupation","passport_number","password",
+        "phone_number","product_sku","routing_number","ssn","time","username","license_plate"]
+
+ # Put your initial list here
         self.ban_list_version = 1
 
     def show_banlist(self):
@@ -81,20 +87,35 @@ class DataFog:
         fake = Faker()
 
         faker_methods = {
-            'account_number': fake.unique.random_number(digits=10, fix_len=True),
-            'age': lambda: fake.random_int(min=18, max=90),
-            'date': fake.date,
-            'email_address': fake.email,
-            'name': fake.name,
-            'phone_number': fake.phone_number,
-            'first_name': fake.first_name,
-            'last_name' : fake.last_name,
-            'address' : fake.address().replace("\n", ", "),
-            'email_address' : fake.email(),
-            'product_sku' : fake.random_int(min=1000, max=9999),
-            'product_quantity' : fake.random_int(min=1, max=10)
+            "address": fake.address,
+            "age": lambda: fake.random_int(min=18, max=90),
+            "bank_account": fake.bban,
+            "credit_card": fake.credit_card_full,
+            "credit_card_expiration": fake.credit_card_expire,
+            "date": fake.date,
+            "email_address": fake.email,
+            "first_name": fake.first_name,
+            "ip_address": fake.ipv4,
+            "last_name": fake.last_name,
+            "location": fake.location_on_land,
+            "city": fake.city,
+            "latlong": fake.latlng,
+            "country": fake.country,
+            "state": fake.state,
+            "zip": fake.postcode,
+            "name": fake.name,
+            "occupation": fake.job,
+            "password": lambda: fake.password(length=12, special_chars=False, upper_case=True),
+            "phone_number": fake.phone_number,
+            "product_sku": fake.isbn13,
+            "routing_number": fake.aba,
+            "ssn": fake.ssn,
+            "time": fake.time,
+            "license_plate": fake.license_plate
+            }
+
+
         
-        }
 
         # Read the file from train_path
         df = pd.read_csv(input_path)
@@ -102,15 +123,17 @@ class DataFog:
         for col in df.columns:
             if col in self.ban_list and col in faker_methods:
                 original_values = df[col].tolist()  # Keep a list of original values
-                df[col] = df[col].apply(lambda x: faker_methods[col])  # Synthetic values
+                df[col] = df[col].apply(lambda x: faker_methods[col]())  # Synthetic values
                 synthetic_values = df[col].tolist()  # Keep a list of synthetic values
 
-                # Save each original and synthetic value pair in the database
+            # Save each original and synthetic value pair in the database
                 for original, synthetic in zip(original_values, synthetic_values):
                     self.save(record_id=None, field_name=col, original_value=original, new_value=synthetic)
 
         # Save the modified DataFrame to a new file
         df.to_csv(os.path.join(output_path, 'synthetic_output.csv'), index=False)
+
+
         print(df)
         return True
 
