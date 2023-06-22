@@ -22,7 +22,7 @@ class DataFog:
         self.engine = create_engine(db_path, echo = False)
         Base.metadata.create_all(self.engine)  # Create tables
         self.Session = sessionmaker(bind=self.engine)
-        self.ban_list = ["account_number", "age", "date", "date_interval", "dob", "driver_license", "duration", "email_address", "event", "filename", "gender_sexuality", "healthcare_number", "ip_address", "language", "location", "location_address", "location_city", "location_coordinate", "location_country", "location_state", "location_zip", "marital_status", "money", "name", "name_family", "name_given", "numerical_pii", "organization", "occupation", "origin", "passport_number", "password", "phone_number", "physical_attribute", "political_affiliation", "religion", "ssn", "time", "url", "username", "vehicle_id", "zodiac_sign", "blood_type", "condition", "dose", "drug", "injury", "medical_process", "statistics", "bank_account", "credit_card", "credit_card_expiration", "cvv", "routing_number"]  # Put your initial list here
+        self.ban_list = ["account_number","address", "age", "date", "date_interval", "dob", "driver_license", "duration", "email_address", "event", "filename", "gender_sexuality", "healthcare_number", "ip_address", "language", "location", "Location Address", "location_city", "location_coordinate", "location_country", "location_state", "location_zip", "marital_status", "money", "name", "name_family", "name_given", "numerical_pii", "organization", "occupation", "origin", "passport_number", "password", "phone_number", "physical_attribute", "political_affiliation", "religion", "ssn", "time", "url", "username", "vehicle_id", "zodiac_sign", "blood_type", "condition", "dose", "drug", "injury", "medical_process", "statistics", "bank_account", "credit_card", "credit_card_expiration", "cvv", "routing_number","First Name", "Last Name"]  # Put your initial list here
         self.ban_list_version = 1
 
     def show_banlist(self):
@@ -77,21 +77,24 @@ class DataFog:
         return contains_pii, pii_fields
 
     def swap(self, input_path: str, output_path: str) -> bool:
-
         # Faker Setup
         fake = Faker()
 
         faker_methods = {
-            'account_number': fake.unique.random_number,
-            'age': fake.random_int,
+            'account_number': fake.unique.random_number(digits=10, fix_len=True),
+            'age': lambda: fake.random_int(min=18, max=90),
             'date': fake.date,
             'email_address': fake.email,
             'name': fake.name,
             'phone_number': fake.phone_number,
-            # Add all other mappings
-            # ...
+            'first_name': fake.first_name,
+            'last_name' : fake.last_name,
+            'address' : fake.address().replace("\n", ", "),
+            'email_address' : fake.email(),
+            'product_sku' : fake.random_int(min=1000, max=9999),
+            'product_quantity' : fake.random_int(min=1, max=10)
+        
         }
-
 
         # Read the file from train_path
         df = pd.read_csv(input_path)
@@ -99,7 +102,7 @@ class DataFog:
         for col in df.columns:
             if col in self.ban_list and col in faker_methods:
                 original_values = df[col].tolist()  # Keep a list of original values
-                df[col] = df[col].apply(lambda x: faker_methods[col]())  # Synthetic values
+                df[col] = df[col].apply(lambda x: faker_methods[col])  # Synthetic values
                 synthetic_values = df[col].tolist()  # Keep a list of synthetic values
 
                 # Save each original and synthetic value pair in the database
@@ -108,8 +111,9 @@ class DataFog:
 
         # Save the modified DataFrame to a new file
         df.to_csv(os.path.join(output_path, 'synthetic_output.csv'), index=False)
-
+        print(df)
         return True
+
 
     @staticmethod
     def redact(value: str) -> str:

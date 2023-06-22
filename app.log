@@ -1,0 +1,41 @@
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.address`.
+faker.factory - DEBUG - Provider `faker.providers.address` has been localized to `en_US`.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.automotive`.
+faker.factory - DEBUG - Provider `faker.providers.automotive` has been localized to `en_US`.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.bank`.
+faker.factory - DEBUG - Specified locale `en_US` is not available for provider `faker.providers.bank`. Locale reset to `en_GB` for this provider.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.barcode`.
+faker.factory - DEBUG - Provider `faker.providers.barcode` has been localized to `en_US`.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.color`.
+faker.factory - DEBUG - Provider `faker.providers.color` has been localized to `en_US`.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.company`.
+faker.factory - DEBUG - Provider `faker.providers.company` has been localized to `en_US`.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.credit_card`.
+faker.factory - DEBUG - Provider `faker.providers.credit_card` has been localized to `en_US`.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.currency`.
+faker.factory - DEBUG - Provider `faker.providers.currency` has been localized to `en_US`.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.date_time`.
+faker.factory - DEBUG - Provider `faker.providers.date_time` has been localized to `en_US`.
+faker.factory - DEBUG - Provider `faker.providers.emoji` does not feature localization. Specified locale `en_US` is not utilized for this provider.
+faker.factory - DEBUG - Provider `faker.providers.file` does not feature localization. Specified locale `en_US` is not utilized for this provider.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.geo`.
+faker.factory - DEBUG - Provider `faker.providers.geo` has been localized to `en_US`.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.internet`.
+faker.factory - DEBUG - Provider `faker.providers.internet` has been localized to `en_US`.
+faker.factory - DEBUG - Provider `faker.providers.isbn` does not feature localization. Specified locale `en_US` is not utilized for this provider.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.job`.
+faker.factory - DEBUG - Provider `faker.providers.job` has been localized to `en_US`.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.lorem`.
+faker.factory - DEBUG - Provider `faker.providers.lorem` has been localized to `en_US`.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.misc`.
+faker.factory - DEBUG - Provider `faker.providers.misc` has been localized to `en_US`.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.person`.
+faker.factory - DEBUG - Provider `faker.providers.person` has been localized to `en_US`.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.phone_number`.
+faker.factory - DEBUG - Provider `faker.providers.phone_number` has been localized to `en_US`.
+faker.factory - DEBUG - Provider `faker.providers.profile` does not feature localization. Specified locale `en_US` is not utilized for this provider.
+faker.factory - DEBUG - Provider `faker.providers.python` does not feature localization. Specified locale `en_US` is not utilized for this provider.
+faker.factory - DEBUG - Provider `faker.providers.sbn` does not feature localization. Specified locale `en_US` is not utilized for this provider.
+faker.factory - DEBUG - Looking for locale `en_US` in provider `faker.providers.ssn`.
+faker.factory - DEBUG - Provider `faker.providers.ssn` has been localized to `en_US`.
+faker.factory - DEBUG - Provider `faker.providers.user_agent` does not feature localization. Specified locale `en_US` is not utilized for this provider.
