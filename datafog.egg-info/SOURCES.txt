@@ -1,4 +1,3 @@
-LICENSE.MD
 setup.py
 datafog/__init__.py
 datafog/datafog.py

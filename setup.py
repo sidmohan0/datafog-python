@@ -10,12 +10,12 @@ with open('README.md', 'r') as f:
 
 setup(
     name='datafog',
-    version='1.2.0',  # versioning of your package
+    version='1.3.0',  # versioning of your package
     packages=find_packages(),  # automatically find all packages
     author='Sid Mohan',
     author_email='sid@datafog.dev',
-    description='A Python package that provides several methods for data handling',  # a brief description of your package
-    long_description=open('README.md').read(),  # a long description read from the README.md file
+    long_description=long_description,
+    long_description_content_type='text/markdown', 
     install_requires=['faker', 'pandas','sqlalchemy','sqlalchemy.orm','werkzeug','typing','hashlib'],  # a list of other Python packages required by this package
     classifiers=[
         'License :: OSI Approved :: BSD License',  # Choose a license
