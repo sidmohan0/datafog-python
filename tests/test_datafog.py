@@ -1,5 +1,6 @@
 import pytest
 from datafog import DataFog
+from datafog.models import ValueMapping, Base
 import pandas as pd
 import os
 import hashlib
@@ -84,3 +85,17 @@ def test_hash_known_value():
 
     # Test hash method with empty string
     assert datafog.hash('') == known_hash
+
+
+def test_save():
+    datafog = DataFog(db_path='sqlite:///:memory:')
+    session = datafog.Session()
+    datafog.save(record_id=1, field_name='test', original_value='original', new_value='synthetic')
+    # Query the database manually
+    result = session.query(ValueMapping).first()
+    assert result is not None
+    assert result.record_id == 1
+    assert result.field_name == 'test'
+    assert result.original_value == 'original'
+    assert result.new_value == 'synthetic'
+    session.close()
