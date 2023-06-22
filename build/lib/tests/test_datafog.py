@@ -99,3 +99,97 @@ def test_save():
     assert result.original_value == 'original'
     assert result.new_value == 'synthetic'
     session.close()
+
+def test_add_to_banlist():
+    # Create a DataFog instance
+    datafog = DataFog()
+
+    # Test add_to_banlist method
+    field_to_add = "test_field"
+    datafog.add_to_banlist(field_to_add)
+    
+    assert field_to_add in datafog.ban_list
+
+def test_remove_from_banlist():
+    # Create a DataFog instance
+    datafog = DataFog()
+
+    # Add a field to ban_list
+    field_to_add = "test_field"
+    datafog.add_to_banlist(field_to_add)
+
+    # Test remove_from_banlist method
+    datafog.remove_from_banlist(field_to_add)
+    
+    assert field_to_add not in datafog.ban_list
+
+def test_scan_with_updated_banlist():
+    datafog = DataFog()
+
+    # Add "email_address" to ban_list
+    datafog.add_to_banlist("email_address")
+
+    # Test case: When the csv file has columns present in ban_list
+    contains_pii, pii_fields = datafog.scan("files/test.csv")
+    assert contains_pii == True
+    assert set(pii_fields) == {"name", "age", "email_address"}
+
+    # Remove "email_address" from ban_list
+    datafog.remove_from_banlist("email_address")
+
+    # Test case: When the csv file has columns present in ban_list
+    contains_pii, pii_fields = datafog.scan("files/test.csv")
+    assert contains_pii == True
+    assert "email_address" not in pii_fields
+
+def test_swap_with_updated_banlist():
+    # Define data
+    data = {
+        'account_number': ['1234567890', '0987654321', '1112223334'],
+        'age': [25, 30, 40],
+        'name': ['John Doe', 'Jane Doe', 'Jim Smith'],
+        'email_address': ['john.doe@gmail.com', 'jane.doe@gmail.com', 'jim.smith@gmail.com']
+    }
+
+    # Create DataFrame
+    df = pd.DataFrame(data)
+
+    # Write DataFrame to CSV
+    input_path = 'files/test_contains_pii.csv'
+    df.to_csv(input_path, index=False)
+
+    # Create a DataFog instance
+    datafog = DataFog()
+
+    # Add "email_address" to ban_list
+    datafog.add_to_banlist("email_address")
+
+    # Define the output path
+    output_path = 'files/'
+
+    # Call the swap method
+    datafog.swap(input_path, output_path)
+
+    # Load the output file
+    df_output = pd.read_csv(os.path.join(output_path, 'synthetic_output.csv'))
+
+    # Check that the output file has the same shape as the input file
+    assert df.shape == df_output.shape
+
+    # Check that the output file has the same column names as the input file
+    assert list(df.columns) == list(df_output.columns)
+
+    # Check that the output file does not contain the original email addresses
+    assert not df_output['email_address'].isin(df['email_address']).any()
+
+    # Remove "email_address" from ban_list
+    datafog.remove_from_banlist("email_address")
+
+    # Call the swap method again
+    datafog.swap(input_path, output_path)
+
+    # Load the output file
+    df_output = pd.read_csv(os.path.join(output_path, 'synthetic_output.csv'))
+
+    # Check that the output file may contain the original email addresses
+    assert df_output['email_address'].isin(df['email_address']).any()

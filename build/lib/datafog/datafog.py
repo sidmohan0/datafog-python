@@ -22,6 +22,35 @@ class DataFog:
         self.engine = create_engine(db_path, echo = False)
         Base.metadata.create_all(self.engine)  # Create tables
         self.Session = sessionmaker(bind=self.engine)
+        self.ban_list = ["account_number", "age", "date", "date_interval", "dob", "driver_license", "duration", "email_address", "event", "filename", "gender_sexuality", "healthcare_number", "ip_address", "language", "location", "location_address", "location_city", "location_coordinate", "location_country", "location_state", "location_zip", "marital_status", "money", "name", "name_family", "name_given", "numerical_pii", "organization", "occupation", "origin", "passport_number", "password", "phone_number", "physical_attribute", "political_affiliation", "religion", "ssn", "time", "url", "username", "vehicle_id", "zodiac_sign", "blood_type", "condition", "dose", "drug", "injury", "medical_process", "statistics", "bank_account", "credit_card", "credit_card_expiration", "cvv", "routing_number"]  # Put your initial list here
+        self.ban_list_version = 1
+
+    def show_banlist(self):
+        print(f"Ban List Version {self.ban_list_version}:")
+        print(self.ban_list)
+
+    def add_to_banlist(self, *args):
+        added_fields = [field for field in args if field not in self.ban_list]
+        if not added_fields:
+            print("No new fields to add.")
+            return
+        self.ban_list.extend(added_fields)
+        self.ban_list_version += 1
+        print(f"Successfully added: {added_fields}")
+        print(f"Updated Ban List (Version {self.ban_list_version}):")
+        print(self.ban_list)
+
+    def remove_from_banlist(self, *args):
+        original_len = len(self.ban_list)
+        self.ban_list = [field for field in self.ban_list if field not in args]
+        removed_fields = args if len(self.ban_list) < original_len else []
+        if not removed_fields:
+            print("No fields to remove.")
+            return
+        self.ban_list_version += 1
+        print(f"Successfully removed: {removed_fields}")
+        print(f"Updated Ban List (Version {self.ban_list_version}):")
+        print(self.ban_list)
 
     def scan(self, input_path: str) -> Tuple[bool, List[str]]:
         """
@@ -32,8 +61,6 @@ class DataFog:
         """
         fake = Faker()
 
-        ban_list = ["account_number", "age", "date", "date_interval", "dob", "driver_license", "duration", "email_address", "event", "filename", "gender_sexuality", "healthcare_number", "ip_address", "language", "location", "location_address", "location_city", "location_coordinate", "location_country", "location_state", "location_zip", "marital_status", "money", "name", "name_family", "name_given", "numerical_pii", "organization", "occupation", "origin", "passport_number", "password", "phone_number", "physical_attribute", "political_affiliation", "religion", "ssn", "time", "url", "username", "vehicle_id", "zodiac_sign", "blood_type", "condition", "dose", "drug", "injury", "medical_process", "statistics", "bank_account", "credit_card", "credit_card_expiration", "cvv", "routing_number"]
-
         # Read the file from input_path
         df = pd.read_csv(input_path)
 
@@ -41,7 +68,7 @@ class DataFog:
         pii_fields = []
 
         for col in df.columns:
-            if col in ban_list:
+            if col in self.ban_list:
                 pii_fields.append(col)
 
         # Determine if any PII fields were found
@@ -65,13 +92,12 @@ class DataFog:
             # ...
         }
 
-        ban_list = ["account_number", "age", "date", "date_interval", "dob", "driver_license", "duration", "email_address", "event", "filename", "gender_sexuality", "healthcare_number", "ip_address", "language", "location", "location_address", "location_city", "location_coordinate", "location_country", "location_state", "location_zip", "marital_status", "money", "name", "name_family", "name_given", "numerical_pii", "organization", "occupation", "origin", "passport_number", "password", "phone_number", "physical_attribute", "political_affiliation", "religion", "ssn", "time", "url", "username", "vehicle_id", "zodiac_sign", "blood_type", "condition", "dose", "drug", "injury", "medical_process", "statistics", "bank_account", "credit_card", "credit_card_expiration", "cvv", "routing_number"]
 
         # Read the file from train_path
         df = pd.read_csv(input_path)
 
         for col in df.columns:
-            if col in ban_list and col in faker_methods:
+            if col in self.ban_list and col in faker_methods:
                 original_values = df[col].tolist()  # Keep a list of original values
                 df[col] = df[col].apply(lambda x: faker_methods[col]())  # Synthetic values
                 synthetic_values = df[col].tolist()  # Keep a list of synthetic values
