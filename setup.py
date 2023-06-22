@@ -3,6 +3,10 @@ from setuptools import setup, find_packages
 
 
 
+# Read README for the long description
+with open('README.md', 'r') as f:
+    long_description = f.read()
+
 
 setup(
     name='datafog',
