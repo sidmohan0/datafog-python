@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='datafog',
-    version='1.1.0',  # versioning of your package
+    version='1.2.0',  # versioning of your package
     packages=find_packages(),  # automatically find all packages
     author='Sid Mohan',
     author_email='sid@datafog.dev',
