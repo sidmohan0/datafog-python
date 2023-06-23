@@ -7,6 +7,9 @@ DataFog (or the product formerly known as Codexify) is a Python package that sim
 pip install setuptools==65.5.0 "wheel<0.40.0"
 ```
 
+**Product Demo** 
+[Vide](https://www.loom.com/share/ba2561a16d004f479a02c204272ccb28?sid=252cc726-8510-4242-a50e-1f7d1b5606e6)
+
 ## Libraries Used
 * [faker](www.github.com/joke2k/faker) for Synthetic Data Generation
 * Boilerplate PII detection code (swapping in with a custom solution soon)

@@ -10,7 +10,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='datafog',
-    version='1.3.7',  # versioning of your package
+    version='1.3.8',  # versioning of your package
     packages=find_packages(),  # automatically find all packages
     author='Sid Mohan',
     author_email='sid@datafog.dev',
